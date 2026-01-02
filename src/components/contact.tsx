@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -9,10 +10,14 @@ import {
   Instagram,
   Linkedin,
 } from "lucide-react";
-import { JSX } from "react/jsx-runtime";
 
+/* =======================
+   MAIN CONTACT COMPONENT
+======================= */
 export default function Contact() {
-  const [status, setStatus] = useState<"idle" | "success" | "error" | "loading">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -21,16 +26,22 @@ export default function Contact() {
     const form = e.currentTarget;
     const formData = new FormData(form);
 
-    const response = await fetch("https://formspree.io/f/xqaggwpl", {
-      method: "POST",
-      body: formData,
-      headers: { Accept: "application/json" },
-    });
+    try {
+      const response = await fetch("https://formspree.io/f/xqaggwpl", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
 
-    if (response.ok) {
-      setStatus("success");
-      form.reset();
-    } else {
+      if (response.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
       setStatus("error");
     }
   }
@@ -41,9 +52,9 @@ export default function Contact() {
       className="bg-gray-50 dark:bg-slate-900 py-20 px-6 md:px-12"
     >
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-        {/* LEFT SIDE - Text + Socials */}
+        {/* LEFT SIDE */}
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
+          initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           className="space-y-6"
@@ -51,12 +62,12 @@ export default function Contact() {
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white">
             Let’s <span className="text-blue-600">Connect</span> ✉️
           </h2>
+
           <p className="text-gray-600 dark:text-gray-300 max-w-md">
-            Have a project idea, collaboration, or just want to say hi?  
+            Have a project idea, collaboration, or just want to say hi?
             Drop me a message — I’ll respond as soon as possible!
           </p>
 
-          {/* Social Links */}
           <div className="flex gap-4 pt-4">
             <SocialLink
               href="https://www.instagram.com/"
@@ -79,10 +90,10 @@ export default function Contact() {
           </div>
         </motion.div>
 
-        {/* RIGHT SIDE - Contact Form */}
+        {/* RIGHT SIDE */}
         <motion.form
           onSubmit={handleSubmit}
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 space-y-6"
@@ -117,19 +128,20 @@ export default function Contact() {
             type="submit"
             whileTap={{ scale: 0.95 }}
             disabled={status === "loading"}
-            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-all"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-all disabled:opacity-60"
           >
             {status === "loading" ? "Sending..." : <>Send Message <Send size={18} /></>}
           </motion.button>
 
           {status === "success" && (
             <p className="text-green-600 font-medium pt-2">
-              ✅ Message sent successfully! I’ll reply soon.
+              ✅ Message sent successfully!
             </p>
           )}
+
           {status === "error" && (
             <p className="text-red-600 font-medium pt-2">
-              ❌ Something went wrong. Please try again later.
+              ❌ Something went wrong. Try again later.
             </p>
           )}
         </motion.form>
@@ -138,7 +150,9 @@ export default function Contact() {
   );
 }
 
-/* 🔹 Input Field Component */
+/* =======================
+   INPUT FIELD
+======================= */
 function InputField({
   label,
   name,
@@ -151,7 +165,7 @@ function InputField({
   name: string;
   placeholder: string;
   type?: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   required?: boolean;
 }) {
   return (
@@ -166,14 +180,16 @@ function InputField({
           name={name}
           placeholder={placeholder}
           required={required}
-          className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
     </div>
   );
 }
 
-/* 🔹 Textarea Field Component */
+/* =======================
+   TEXTAREA FIELD
+======================= */
 function TextAreaField({
   label,
   name,
@@ -184,7 +200,7 @@ function TextAreaField({
   label: string;
   name: string;
   placeholder: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   required?: boolean;
 }) {
   return (
@@ -199,14 +215,25 @@ function TextAreaField({
           placeholder={placeholder}
           rows={5}
           required={required}
-          className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all resize-none"
-        ></textarea>
+          className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+        />
       </div>
     </div>
   );
 }
 
-/* 🔹 Social Link Button */
+/* =======================
+   SOCIAL LINK (TAILWIND SAFE)
+======================= */
+const colorMap = {
+  pink:
+    "bg-pink-100 text-pink-600 hover:bg-pink-200 dark:bg-pink-900/20 dark:text-pink-400 dark:hover:bg-pink-900/40",
+  blue:
+    "bg-blue-100 text-blue-600 hover:bg-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/40",
+  purple:
+    "bg-purple-100 text-purple-600 hover:bg-purple-200 dark:bg-purple-900/20 dark:text-purple-400 dark:hover:bg-purple-900/40",
+};
+
 function SocialLink({
   href,
   icon,
@@ -214,9 +241,9 @@ function SocialLink({
   color,
 }: {
   href: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   label: string;
-  color: string;
+  color: keyof typeof colorMap;
 }) {
   return (
     <motion.a
@@ -224,7 +251,7 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       whileHover={{ scale: 1.1, y: -2 }}
-      className={`p-3 rounded-full bg-${color}-100 dark:bg-${color}-900/20 text-${color}-600 dark:text-${color}-400 hover:bg-${color}-200 dark:hover:bg-${color}-900/40 transition-all`}
+      className={`p-3 rounded-full transition-all ${colorMap[color]}`}
       aria-label={label}
     >
       {icon}
