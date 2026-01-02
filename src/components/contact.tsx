@@ -9,6 +9,7 @@ import {
   Instagram,
   Linkedin,
 } from "lucide-react";
+import { JSX } from "react/jsx-runtime";
 
 export default function Contact() {
   const [status, setStatus] = useState<"idle" | "success" | "error" | "loading">("idle");
