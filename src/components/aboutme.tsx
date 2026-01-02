@@ -1,129 +1,93 @@
 "use client";
-import React from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Figma, Code2, Monitor, PenTool } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function AboutSection() {
+export default function AboutMeVideoSync() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [role, setRole] = useState("UI/UX Designer 🎨");
+
+  const handleTimeUpdate = () => {
+    const currentTime = videoRef.current?.currentTime || 0;
+
+    if (currentTime >= 1 && currentTime < 2) setRole("UI/UX Designer 🎨");
+    else if (currentTime >= 2 && currentTime < 4) setRole("Frontend Developer 💻");
+    else if (currentTime >= 4 && currentTime < 7) setRole("Graphic Designer 🖌️");
+    else if (currentTime >= 7 && currentTime < 10) setRole("Video Editor 🎥");
+    else if (currentTime >= 10) setRole("Creative Innovator ⚡");
+  };
+
   return (
-   <section
-  id="about"
-  className="relative flex flex-col md:flex-row items-center justify-between px-6 md:px-20 py-20 bg-gray-100 text-gray-900 overflow-x-hidden"
->
-
-      {/* --- SVG Background Animation --- */}
-      <motion.svg
+    <section
+      id="about"
+      className="relative flex flex-col md:flex-row items-center justify-center px-4 sm:px-8 md:px-16 lg:px-24 py-16 md:py-24 bg-gray-100 text-gray-900 overflow-hidden"
+    >
+      {/* --- Animated Background Circles --- */}
+      <motion.div
+        className="absolute inset-0 -z-10 overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="absolute inset-0 w-full h-full -z-10"
-        xmlns="http://www.w3.org/2000/svg"
       >
-        <motion.circle
-          cx="10%"
-          cy="20%"
-          r="80"
-          fill="url(#grad1)"
-          animate={{ cy: ["20%", "25%", "20%"], r: [80, 90, 80] }}
+        <motion.div
+          className="absolute w-64 h-64 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full blur-3xl opacity-20 top-10 left-10"
+          animate={{ y: [0, -20, 0] }}
           transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
         />
-        <motion.circle
-          cx="90%"
-          cy="70%"
-          r="100"
-          fill="url(#grad2)"
-          animate={{ cy: ["70%", "75%", "70%"], r: [100, 115, 100] }}
+        <motion.div
+          className="absolute w-80 h-80 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-3xl opacity-20 bottom-10 right-10"
+          animate={{ y: [0, 20, 0] }}
           transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
         />
-        <defs>
-          <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#6366F1" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#EC4899" stopOpacity="0.1" />
-          </linearGradient>
-          <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#EC4899" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#6366F1" stopOpacity="0.1" />
-          </linearGradient>
-        </defs>
-      </motion.svg>
+      </motion.div>
 
-      {/* --- Left Side (Image + Floating Icons) --- */}
+      {/* --- Left: Video --- */}
       <motion.div
         initial={{ opacity: 0, x: -60 }}
         whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.7 }}
-        viewport={{ once: true }}
-        className="relative w-64 h-64 md:w-80 md:h-80 rounded-3xl overflow-hidden shadow-xl mb-10 md:mb-0 bg-white"
+        transition={{ duration: 0.8 }}
+        className="relative w-full md:w-1/2 flex justify-center items-center mb-10 md:mb-0"
       >
-        <Image
-          src="/me.png"
-          alt="My photo"
-          width={400}
-          height={400}
-          className="object-cover w-full h-full"
-        />
-
-        {/* Floating Tool Icons */}
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 3 }}
-          className="absolute -top-6 -left-6 bg-white shadow-md p-3 rounded-full border border-gray-200"
-        >
-          <Figma className="text-indigo-500" size={24} />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 3, delay: 1 }}
-          className="absolute top-6 -right-6 bg-white shadow-md p-3 rounded-full border border-gray-200"
-        >
-          <Code2 className="text-blue-500" size={24} />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 3, delay: 1.5 }}
-          className="absolute bottom-6 -left-6 bg-white shadow-md p-3 rounded-full border border-gray-200"
-        >
-          <Monitor className="text-violet-500" size={24} />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 3, delay: 2 }}
-          className="absolute -bottom-6 right-6 bg-white shadow-md p-3 rounded-full border border-gray-200"
-        >
-          <PenTool className="text-pink-500" size={24} />
-        </motion.div>
+        <div className="relative w-full max-w-[400px] sm:max-w-[300px] md:max-w-[400px] aspect-[9/14] rounded-3xl overflow-hidden shadow-2xl border border-gray-300">
+          <video
+            ref={videoRef}
+            src="/mee.mp4" // 🔁 Replace with your actual video file path (e.g., /about/video.mp4)
+            autoPlay
+            muted
+            loop
+            playsInline
+            onTimeUpdate={handleTimeUpdate}
+            className="absolute inset-0 w-full h-full object-cover rounded-3xl"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent rounded-3xl" />
+        </div>
       </motion.div>
 
-      {/* --- Right Side (Text Content) --- */}
+      {/* --- Right: Dynamic Role Text --- */}
       <motion.div
         initial={{ opacity: 0, x: 60 }}
         whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.7 }}
-        viewport={{ once: true }}
-        className="max-w-xl text-center md:text-left"
+        transition={{ duration: 0.8 }}
+        className="text-center md:text-left max-w-xl"
       >
-        <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent">
-          About Me
-        </h2>
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">About Me</h2>
 
-        <p className="text-gray-700 mb-6 leading-relaxed">
-          Hi! I’m <span className="font-semibold text-gray-900">[Your Name]</span>, 
-          a passionate <span className="text-indigo-600 font-medium">UI/UX & Frontend Developer</span> 
-          who loves designing and coding interactive experiences that are functional and beautiful.  
-          I believe great design bridges the gap between creativity and technology.
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={role}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.6 }}
+            className="text-2xl sm:text-3xl font-semibold text-indigo-600 h-12 sm:h-14"
+          >
+            {role}
+          </motion.p>
+        </AnimatePresence>
+
+        <p className="text-gray-600 mt-6 text-base sm:text-lg leading-relaxed">
+          As a <span className="font-medium text-indigo-600">{role.replace(/🎨|💻|🖌️|🎥|⚡/g, "")}</span>,  
+          I blend creativity and logic to craft immersive digital experiences.  
+          Each role I take helps me bring ideas to life — one frame, one pixel, and one line of code at a time.
         </p>
-
-        <ul className="text-gray-600 space-y-2 mb-8">
-          <li>🎨 UI/UX Design (Figma, Framer, Adobe XD)</li>
-          <li>💻 Frontend Development (Next.js, React, Tailwind CSS)</li>
-          <li>🧠 Creative Problem Solving</li>
-          <li>🎥 Graphic & Video Editing (Canva, Premiere Pro)</li>
-        </ul>
-
-        <Button className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-full px-6 py-3 shadow-md">
-          Let’s Connect
-        </Button>
       </motion.div>
     </section>
   );
