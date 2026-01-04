@@ -1,14 +1,16 @@
-import PortfolioHeader from "@/components/header";
+"use client";
+
+import ScrollToTop from "@/components/ScrollToTop";
 import Hero from "@/components/hero";
 import AboutMe from "@/components/aboutme";
-import Projects from "@/components/projects";
 import Skills from "@/components/skills";
+import Projects from "@/components/projects";
 import Contact from "@/components/contact";
 
 export default function Page() {
   return (
     <>
-      <PortfolioHeader />
+      <ScrollToTop />
       <main>
         <Hero />
         <AboutMe />
