@@ -1,20 +1,20 @@
-import AboutMeSection from "@/components/aboutme";
 import PortfolioHeader from "@/components/header";
 import Hero from "@/components/hero";
-import ProjectShowcase from "@/components/projectshowcase";
-import SkillsTools from "@/components/skills";
+import AboutMe from "@/components/aboutme";
+import Projects from "@/components/projects";
+import Skills from "@/components/skills";
 import Contact from "@/components/contact";
+
 export default function Page() {
   return (
     <>
       <PortfolioHeader />
-      <main className="pt-24">
+      <main>
         <Hero />
-       <AboutMeSection/>
-       <ProjectShowcase />
-       <SkillsTools />
-       <Contact />
-       
+        <AboutMe />
+        <Skills />
+        <Projects />
+        <Contact />
       </main>
     </>
   );

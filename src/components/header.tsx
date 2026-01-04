@@ -1,171 +1,139 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { Download, Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
+  { id: "hero", label: "Hero" },
   { id: "aboutme", label: "About" },
-  { id: "projectshowcase", label: "Projects" },
   { id: "skills", label: "Skills" },
+  { id: "projects", label: "Projects" },
   { id: "contact", label: "Contact" },
 ];
 
 export default function PortfolioHeader() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("");
-
-  useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 50);
-
-          const sections = NAV_ITEMS.map((item) =>
-            document.getElementById(item.id)
-          );
-
-          const current = sections.find(
-            (section) =>
-              section &&
-              section.getBoundingClientRect().top <= 120 &&
-              section.getBoundingClientRect().bottom >= 120
-          );
-
-          if (current) setActiveSection(current.id);
-
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const [open, setOpen] = useState(false);
 
   return (
     <header
-      className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 
-      w-[92%] max-w-6xl rounded-full flex items-center justify-between 
-      px-6 md:px-10 py-3 transition-all duration-500 
-      border backdrop-blur-xl
-      ${
-        isScrolled
-          ? "bg-white/70 border-gray-300 shadow-lg text-gray-800"
-          : "bg-white/10 border-white/20 text-white"
-      }`}
+      className="
+        sticky top-0 z-50 w-full
+        bg-[#FFF3E6]/90 backdrop-blur-md
+        border-b border-black/10
+      "
     >
-      {/* Logo */}
-      <Link
-        href="#home"
-        aria-label="Go to home section"
-        className="text-xl font-semibold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500"
-      >
-        Mohanthsai<span className="text-gray-400">.</span>
-      </Link>
+      {/* TOP BAR */}
+      <div className="w-[95%] max-w-7xl mx-auto py-4 flex items-center justify-between">
+        {/* LOGO */}
+        <a
+          href="#hero"
+          className="
+            bg-[#7C3AED] text-white font-semibold
+            px-4 py-2 rounded-md
+            shadow-[6px_6px_0_#0F172A]
+          "
+        >
+          MohanthSai
+        </a>
 
-      {/* Desktop Nav */}
-      <nav className="hidden md:flex gap-8 text-sm lg:text-base font-medium">
-        {NAV_ITEMS.map(({ id, label }) => (
-          <Link key={id} href={`#${id}`} className="relative group">
-            <span
-              className={`transition-colors ${
-                activeSection === id
-                  ? "text-blue-500"
-                  : isScrolled
-                  ? "text-gray-800"
-                  : "text-white"
-              }`}
+        {/* DESKTOP NAV */}
+        <nav
+          className="
+            hidden md:flex items-center gap-8
+            bg-white px-10 py-3 rounded-md
+            shadow-[0_8px_0_#0F172A]
+          "
+        >
+          {NAV_ITEMS.map(({ id, label }) => (
+            <a
+              key={id}
+              href={`#${id}`}
+              className="
+                font-medium px-4 py-2 rounded-md
+                text-[#0F172A]
+                hover:bg-[#7C3AED] hover:text-white
+                transition
+              "
             >
               {label}
-            </span>
-            <span
-              className={`absolute -bottom-1 left-0 h-[2px] bg-gradient-to-r from-blue-400 to-purple-500 transition-all
-              ${activeSection === id ? "w-full" : "w-0 group-hover:w-full"}`}
-            />
-          </Link>
-        ))}
-      </nav>
+            </a>
+          ))}
+        </nav>
 
-      {/* Resume */}
-      <div className="hidden md:block">
-        <Link
-          href="#resume"
-          className={`px-5 py-2 rounded-full font-semibold text-sm transition
-          ${
-            isScrolled
-              ? "bg-gray-900 text-white hover:bg-black"
-              : "bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:opacity-90"
-          }`}
+        {/* DESKTOP RESUME */}
+        <a
+          href="/Mohanth_Sai_UIUX_Resume.Pdf"
+          download
+          className="
+            hidden md:inline-flex items-center gap-2
+            bg-[#FACC15] text-black font-semibold
+            px-5 py-2 rounded-md
+            shadow-[6px_6px_0_#0F172A]
+            hover:translate-x-[1px] hover:translate-y-[1px]
+            hover:shadow-[4px_4px_0_#0F172A]
+            transition
+          "
         >
+          <Download size={18} />
           Resume
-        </Link>
+        </a>
+
+        {/* MOBILE MENU BUTTON */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="
+            md:hidden p-2 rounded-md
+            bg-white border-2 border-black
+            shadow-[4px_4px_0_#0F172A]
+          "
+        >
+          {open ? <X size={22} /> : <Menu size={22} />}
+        </button>
       </div>
 
-      {/* Mobile Button */}
-      <button
-        onClick={() => setMenuOpen((p) => !p)}
-        aria-label="Toggle menu"
-        aria-expanded={menuOpen}
-        className={`md:hidden w-10 h-10 rounded-full flex items-center justify-center transition
-        ${
-          isScrolled
-            ? "bg-gray-900 text-white hover:bg-black"
-            : "bg-white/20 text-white hover:bg-white/30"
-        }`}
-      >
-        {menuOpen ? <X size={22} /> : <Menu size={22} />}
-      </button>
+      {/* MOBILE NAV */}
+      {open && (
+        <div
+          className="
+            md:hidden w-full
+            bg-white border-t border-black/10
+            px-6 py-6
+            flex flex-col gap-4
+            shadow-[0_8px_0_#0F172A]
+          "
+        >
+          {NAV_ITEMS.map(({ id, label }) => (
+            <a
+              key={id}
+              href={`#${id}`}
+              onClick={() => setOpen(false)}
+              className="
+                px-4 py-3 rounded-md
+                text-[#0F172A] font-medium
+                hover:bg-[#7C3AED] hover:text-white
+                transition
+              "
+            >
+              {label}
+            </a>
+          ))}
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className={`absolute top-full left-0 w-full mt-3 rounded-2xl 
-            backdrop-blur-xl border shadow-xl
-            ${
-              isScrolled
-                ? "bg-white/90 border-gray-200 text-gray-900"
-                : "bg-gradient-to-br from-blue-600 to-purple-600 text-white border-white/30"
-            }`}
+          {/* MOBILE RESUME */}
+          <a
+            href="/Mohanth_Sai_UIUX_Resume.Pdf"
+            download
+            className="
+              mt-4 inline-flex items-center justify-center gap-2
+              bg-[#FACC15] text-black font-semibold
+              px-5 py-3 rounded-md
+              shadow-[6px_6px_0_#0F172A]
+            "
           >
-            <nav className="flex flex-col items-center py-6 gap-4 font-medium">
-              {NAV_ITEMS.map(({ id, label }) => (
-                <Link
-                  key={id}
-                  href={`#${id}`}
-                  onClick={() => setMenuOpen(false)}
-                  className="hover:opacity-80 transition"
-                >
-                  {label}
-                </Link>
-              ))}
-
-              <Link
-                href="#resume"
-                onClick={() => setMenuOpen(false)}
-                className={`mt-2 px-5 py-2 rounded-full font-semibold text-sm transition
-                ${
-                  isScrolled
-                    ? "bg-gray-900 text-white hover:bg-black"
-                    : "bg-white text-indigo-700 hover:bg-gray-100"
-                }`}
-              >
-                Resume
-              </Link>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <Download size={18} />
+            Download Resume
+          </a>
+        </div>
+      )}
     </header>
   );
 }
